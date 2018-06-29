@@ -67,6 +67,7 @@ class BasicLayout extends React.PureComponent {
     const { routerData, menuData } = this.props;
     this.breadcrumbNameMap = getBreadcrumbNameMap(menuData, routerData);
   }
+
   getContext() {
     const { location } = this.props;
     return {
@@ -74,7 +75,9 @@ class BasicLayout extends React.PureComponent {
       breadcrumbNameMap: this.breadcrumbNameMap,
     };
   }
+
   getPageTitle = pathname => {
+    const { intl } = this.props;
     let currRouterData = null;
     // match params path
     Object.keys(this.breadcrumbNameMap).forEach(key => {
@@ -85,12 +88,13 @@ class BasicLayout extends React.PureComponent {
     if (!currRouterData) {
       return 'Ant Design Pro';
     }
-    const message = this.props.intl.formatMessage({
+    const message = intl.formatMessage({
       id: currRouterData.locale || currRouterData.name,
       defaultMessage: currRouterData.name,
     });
     return `${message} - Ant Design Pro`;
   };
+
   getLayoutStyle = () => {
     const { fixSiderbar, collapsed, layout } = this.props;
     if (fixSiderbar && layout !== 'topmenu') {
@@ -100,6 +104,7 @@ class BasicLayout extends React.PureComponent {
     }
     return null;
   };
+
   getContentStyle = () => {
     const { fixedHeader } = this.props;
     return {
@@ -107,6 +112,7 @@ class BasicLayout extends React.PureComponent {
       paddingTop: fixedHeader ? 64 : 0,
     };
   };
+
   getBashRedirect = () => {
     // According to the url parameter to redirect
     // 这里是重定向的,重定向到 url 的 redirect 参数所示地址
@@ -127,16 +133,26 @@ class BasicLayout extends React.PureComponent {
     }
     return redirect;
   };
+
   handleMenuCollapse = collapsed => {
-    this.props.dispatch({
+    const { dispatch } = this.props;
+    dispatch({
       type: 'global/changeLayoutCollapsed',
       payload: collapsed,
     });
   };
 
   render() {
-    const { isMobile, redirectData, routerData, match } = this.props;
-    const isTop = this.props.layout === 'topmenu';
+    const {
+      isMobile,
+      redirectData,
+      routerData,
+      silderTheme,
+      layout: PropsLayout,
+      match,
+      location: { pathname },
+    } = this.props;
+    const isTop = PropsLayout === 'topmenu';
     const bashRedirect = this.getBashRedirect();
     const myRedirectData = redirectData || [];
     const layout = (
@@ -145,7 +161,7 @@ class BasicLayout extends React.PureComponent {
           <SiderMenu
             logo={logo}
             Authorized={Authorized}
-            theme={this.props.silderTheme}
+            theme={silderTheme}
             onCollapse={this.handleMenuCollapse}
             {...this.props}
           />
@@ -177,7 +193,7 @@ class BasicLayout extends React.PureComponent {
     );
     const getPageTitle = memoizeOne(this.getPageTitle);
     return (
-      <DocumentTitle title={getPageTitle(this.props.location.pathname)}>
+      <DocumentTitle title={getPageTitle(pathname)}>
         <ContainerQuery query={query}>
           {params => (
             <Context.Provider value={this.getContext()}>

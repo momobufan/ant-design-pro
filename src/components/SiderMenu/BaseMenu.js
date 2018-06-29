@@ -33,6 +33,7 @@ export default class BaseMenu extends PureComponent {
     super(props);
     this.flatMenuKeys = this.getFlatMenuKeys(props.menuData);
   }
+
   /**
    * Recursively flatten the data
    * [{path:string},{path:string}] => {path,path2}
@@ -48,6 +49,7 @@ export default class BaseMenu extends PureComponent {
     });
     return keys;
   }
+
   /**
    * 获得菜单子节点
    * @memberof SiderMenu
@@ -65,6 +67,7 @@ export default class BaseMenu extends PureComponent {
       })
       .filter(item => item);
   };
+
   // Get the currently selected menu
   getSelectedMenuKeys = () => {
     const {
@@ -72,6 +75,7 @@ export default class BaseMenu extends PureComponent {
     } = this.props;
     return urlToList(pathname).map(itemPath => getMenuMatches(this.flatMenuKeys, itemPath).pop());
   };
+
   /**
    * get SubMenu or Item
    */
@@ -99,6 +103,7 @@ export default class BaseMenu extends PureComponent {
       return <Menu.Item key={item.path}>{this.getMenuItemPath(item)}</Menu.Item>;
     }
   };
+
   /**
    * 判断是否是http链接.返回 Link 或 a
    * Judge whether it is http link.return a or Link
@@ -118,15 +123,16 @@ export default class BaseMenu extends PureComponent {
         </a>
       );
     }
+    const { location, isMobile, onCollapse } = this.props;
     return (
       <Link
         to={itemPath}
         target={target}
-        replace={itemPath === this.props.location.pathname}
+        replace={itemPath === location.pathname}
         onClick={
-          this.props.isMobile
+          isMobile
             ? () => {
-                this.props.onCollapse(true);
+                onCollapse(true);
               }
             : undefined
         }
@@ -136,14 +142,17 @@ export default class BaseMenu extends PureComponent {
       </Link>
     );
   };
+
   // permission to check
   checkPermissionItem = (authority, ItemDom) => {
-    if (this.props.Authorized && this.props.Authorized.check) {
-      const { check } = this.props.Authorized;
+    const { Authorized } = this.props;
+    if (Authorized && Authorized.check) {
+      const { check } = Authorized;
       return check(authority, ItemDom);
     }
     return ItemDom;
   };
+
   conversionPath = path => {
     if (path && path.indexOf('http') === 0) {
       return path;
@@ -151,6 +160,7 @@ export default class BaseMenu extends PureComponent {
       return `/${path || ''}`.replace(/\/+/g, '/');
     }
   };
+
   render() {
     const { openKeys, theme, mode } = this.props;
     // if pathname can't match, use the nearest parent's key
@@ -164,17 +174,18 @@ export default class BaseMenu extends PureComponent {
         openKeys,
       };
     }
+    const { handleOpenChange, style, menuData } = this.props;
     return (
       <Menu
         key="Menu"
         mode={mode}
         theme={theme}
-        onOpenChange={this.props.handleOpenChange}
+        onOpenChange={handleOpenChange}
         selectedKeys={selectedKeys}
-        style={this.props.style}
+        style={style}
         {...props}
       >
-        {this.getNavMenuItems(this.props.menuData)}
+        {this.getNavMenuItems(menuData)}
       </Menu>
     );
   }

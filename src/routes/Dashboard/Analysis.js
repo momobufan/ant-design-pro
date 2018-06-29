@@ -65,6 +65,7 @@ class Analysis extends Component {
       rangePickerValue: getTimeDistance('year'),
     };
   }
+
   state = {
     salesType: 'all',
     currentTabKey: '',
@@ -72,7 +73,8 @@ class Analysis extends Component {
   };
 
   componentDidMount() {
-    this.props.dispatch({
+    const { dispatch } = this.props;
+    dispatch({
       type: 'chart/fetch',
     });
   }
@@ -97,21 +99,23 @@ class Analysis extends Component {
   };
 
   handleRangePickerChange = rangePickerValue => {
+    const { dispatch } = this.props;
     this.setState({
       rangePickerValue,
     });
 
-    this.props.dispatch({
+    dispatch({
       type: 'chart/fetchSalesData',
     });
   };
 
   selectDate = type => {
+    const { dispatch } = this.props;
     this.setState({
       rangePickerValue: getTimeDistance(type),
     });
 
-    this.props.dispatch({
+    dispatch({
       type: 'chart/fetchSalesData',
     });
   };
@@ -224,7 +228,10 @@ class Analysis extends Component {
         sorter: (a, b) => a.range - b.range,
         render: (text, record) => (
           <Trend flag={record.status === 1 ? 'down' : 'up'}>
-            <span style={{ marginRight: 4 }}>{text}%</span>
+            <span style={{ marginRight: 4 }}>
+              {text}
+              %
+            </span>
           </Trend>
         ),
         align: 'right',
@@ -290,6 +297,7 @@ class Analysis extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
+              loading={loading}
               total={() => <Yuan>126560</Yuan>}
               footer={
                 <Field
@@ -370,6 +378,7 @@ class Analysis extends Component {
           </Col>
           <Col {...topColResponsiveProps}>
             <ChartCard
+              loading={loading}
               bordered={false}
               title={
                 <FormattedMessage

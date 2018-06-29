@@ -2,7 +2,7 @@ import React, { PureComponent, createElement } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import memoizeOne from 'memoize-one';
 import deepEqual from 'lodash.isequal';
-import { Breadcrumb, Tabs } from 'antd';
+import { Breadcrumb, Tabs, Card } from 'antd';
 import classNames from 'classnames';
 import styles from './index.less';
 import { urlToList } from '../_utils/pathTools';
@@ -25,6 +25,7 @@ export default class PageHeader extends PureComponent {
     super(props);
     this.conversionFromLocation = memoizeOne(this.conversionFromLocation, deepEqual);
   }
+
   state = {
     breadcrumb: null,
   };
@@ -34,36 +35,43 @@ export default class PageHeader extends PureComponent {
   }
 
   componentDidUpdate(preProps) {
-    if (preProps.tabActiveKey !== this.props.tabActiveKey) {
+    const { tabActiveKey } = this.props;
+    if (preProps.tabActiveKey !== tabActiveKey) {
       this.getBreadcrumbDom();
     }
   }
+
   onChange = key => {
-    if (this.props.onTabChange) {
-      this.props.onTabChange(key);
+    const { onTabChange } = this.props;
+    if (onTabChange) {
+      onTabChange(key);
     }
   };
+
   getBreadcrumbProps = () => {
+    const { routes, params, location, breadcrumbNameMap } = this.props;
     return {
-      routes: this.props.routes,
-      params: this.props.params,
-      routerLocation: this.props.location,
-      breadcrumbNameMap: this.props.breadcrumbNameMap,
+      routes,
+      params,
+      routerLocation: location,
+      breadcrumbNameMap,
     };
   };
+
   getBreadcrumbDom = () => {
     const breadcrumb = this.conversionBreadcrumbList();
     this.setState({
       breadcrumb,
     });
   };
+
   // Generated according to props
   conversionFromProps = () => {
-    const { breadcrumbList, breadcrumbSeparator, linkElement = 'a' } = this.props;
+    const { breadcrumbList, breadcrumbSeparator, itemRender, linkElement = 'a' } = this.props;
     return (
       <Breadcrumb className={styles.breadcrumb} separator={breadcrumbSeparator}>
         {breadcrumbList.map(item => {
-          const title = this.props.itemRender ? this.props.itemRender(item) : item.title;
+          const title = itemRender ? itemRender(item) : item.title;
           return (
             <Breadcrumb.Item key={item.title}>
               {item.href
@@ -81,17 +89,16 @@ export default class PageHeader extends PureComponent {
       </Breadcrumb>
     );
   };
+
   conversionFromLocation = (routerLocation, breadcrumbNameMap) => {
-    const { breadcrumbSeparator, linkElement = 'a' } = this.props;
+    const { breadcrumbSeparator, itemRender, home, linkElement = 'a' } = this.props;
     // Convert the url to an array
     const pathSnippets = urlToList(routerLocation.pathname);
     // Loop data mosaic routing
     const extraBreadcrumbItems = pathSnippets.map((url, index) => {
       const currentBreadcrumb = getBreadcrumb(breadcrumbNameMap, url);
       const isLinkable = index !== pathSnippets.length - 1 && currentBreadcrumb.component;
-      const name = this.props.itemRender
-        ? this.props.itemRender(currentBreadcrumb)
-        : currentBreadcrumb.name;
+      const name = itemRender ? itemRender(currentBreadcrumb) : currentBreadcrumb.name;
       return currentBreadcrumb.name && !currentBreadcrumb.hideInBreadcrumb ? (
         <Breadcrumb.Item key={url}>
           {createElement(
@@ -110,7 +117,7 @@ export default class PageHeader extends PureComponent {
           {
             [linkElement === 'a' ? 'href' : 'to']: '/',
           },
-          this.props.home || 'Home'
+          home || 'Home'
         )}
       </Breadcrumb.Item>
     );
@@ -120,6 +127,7 @@ export default class PageHeader extends PureComponent {
       </Breadcrumb>
     );
   };
+
   /**
    * 将参数转化为面包屑
    * Convert parameters into breadcrumbs
@@ -150,6 +158,7 @@ export default class PageHeader extends PureComponent {
     }
     return null;
   };
+
   // 渲染Breadcrumb 子节点
   // Render the Breadcrumb child node
   itemRender = (route, params, routes, paths) => {
@@ -181,6 +190,7 @@ export default class PageHeader extends PureComponent {
       tabActiveKey,
       tabDefaultActiveKey,
       tabBarExtraContent,
+      loading = false,
     } = this.props;
 
     const clsString = classNames(styles.pageHeader, className);
@@ -191,10 +201,10 @@ export default class PageHeader extends PureComponent {
     if (tabActiveKey !== undefined) {
       activeKeyProps.activeKey = tabActiveKey;
     }
-
+    const { breadcrumb } = this.state;
     return (
-      <div className={clsString}>
-        {this.state.breadcrumb}
+      <Card className={clsString} bodyStyle={{ padding: 0 }} loading={loading}>
+        {breadcrumb}
         <div className={styles.detail}>
           {logo && <div className={styles.logo}>{logo}</div>}
           <div className={styles.main}>
@@ -219,7 +229,7 @@ export default class PageHeader extends PureComponent {
               {tabList.map(item => <TabPane tab={item.tab} key={item.key} />)}
             </Tabs>
           )}
-      </div>
+      </Card>
     );
   }
 }

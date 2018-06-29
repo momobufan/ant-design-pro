@@ -31,6 +31,7 @@ export default class ActiveChart extends Component {
   componentWillUnmount() {
     clearTimeout(this.timer);
   }
+
   loopData = () => {
     requestAnimationFrame(() => {
       this.timer = setTimeout(() => {
@@ -45,6 +46,7 @@ export default class ActiveChart extends Component {
       }, 1000);
     });
   };
+
   render() {
     const { activeData = [] } = this.state;
 

@@ -1,4 +1,4 @@
-import { isUrl } from '../utils/utils';
+import { isUrl } from '../utils/utils'; //引入isUrl方法
 
 const menuData = [
   {
@@ -9,6 +9,12 @@ const menuData = [
       {
         name: '分析页',
         path: 'analysis',
+        // children:[
+        //   {
+        //     name:'好开心',
+        //     path:'monitor'
+        //   }
+        // ]
       },
       {
         name: '监控页',
@@ -157,9 +163,14 @@ const menuData = [
 ];
 
 function formatter(data, parentPath = '/', parentAuthority) {
+  // 如果path不是含有http的链接，即将path设置为完整的相对路径（即父菜单的路径 + 子菜单的路径），并获取当前菜单的权限，
+  // 如果没有权限值，则继承父菜单的权限。其他相关属性（name、hideInMenu等）保持不变
   return data.map(item => {
+    // console.log()
     let { path } = item;
+    // console.log(path)
     if (!isUrl(path)) {
+      // console.log(item.path);
       path = parentPath + item.path;
     }
     const result = {
@@ -168,10 +179,25 @@ function formatter(data, parentPath = '/', parentAuthority) {
       authority: item.authority || parentAuthority,
     };
     if (item.children) {
+      //为了item.children如果存在children就调用回调函数
       result.children = formatter(item.children, `${parentPath}${item.path}/`, item.authority);
     }
     return result;
+    //把所有关于path拼接好
   });
 }
+
+// console.log(formatter(menuData));
+// authority:undefined
+// children:Array(3)
+// 0:{name: "基础表单", path: "/form/basic-form", authority: undefined},
+// 1:{name: "分步表单", path: "/form/step-form", authority: undefined},
+// 2:{name: "高级表单", authority: "admin", path: "/form/advanced-form"}
+// length:3
+// __proto__:Array(0)
+// icon:"form"
+// name:"表单页"
+// path:"/form"
+// __proto__:Objec
 
 export const getMenuData = () => formatter(menuData);

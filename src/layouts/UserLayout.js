@@ -52,6 +52,7 @@ class UserLayout extends React.PureComponent {
 
   render() {
     const { routerData, match } = this.props;
+    console.log('ddddddddd', match.path);
     return (
       <DocumentTitle title={this.getPageTitle()}>
         <div className={styles.container}>

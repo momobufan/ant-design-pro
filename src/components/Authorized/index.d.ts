@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { RouteProps } from 'react-router';
 
-type authorityFN = (currentAuthority?: string) => boolean;
 
+//几乎整篇看不懂
+
+type authorityFN = (currentAuthority?: string) => boolean; 
 type authority = string | Array<string> | authorityFN | Promise<any>;
-
-export type IReactComponent<P = any> =
+// console.log(74147741,authorityFN);
+// console.log('cccccccccccccccccc',authority);
+export type IReactComponent<P = any> = 
   | React.StatelessComponent<P>
   | React.ComponentClass<P>
   | React.ClassicComponentClass<P>;
@@ -38,6 +41,6 @@ export class Authorized extends React.Component<AuthorizedProps, any> {
   static check: check;
 }
 
-declare function renderAuthorize(currentAuthority: string): typeof Authorized;
+declare function renderAuthorize(currentAuthority: string): typeof Authorized;//不懂
 
 export default renderAuthorize;

@@ -1,9 +1,12 @@
-import moment from 'moment';
-import { parse, stringify } from 'qs';
+import moment from 'moment'; // 时间
+import { parse, stringify } from 'qs'; //引入方法
+//1. qs.parse()将URL解析成对象的形式
+//2. qs.stringify()将对象 序列化成URL的形式，以&进行拼接
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
 }
+//当 val值 在<10范围，输出都是拼接的 如 00 ，01，02 ，0-100
 
 export function getTimeDistance(type) {
   const now = new Date();
@@ -142,11 +145,15 @@ function getRenderArr(routes) {
  * @param {routerData} routerData
  */
 export function getRoutes(path, routerData) {
+  console.log('aaaaaaaaaaaaaaaaaa', path);
+  // console.log('bbbbbbbbbbbb',routerData)
   let routes = Object.keys(routerData).filter(
     routePath => routePath.indexOf(path) === 0 && routePath !== path
   );
+  console.log(13131313, routes);
   // Replace path to '' eg. path='user' /user/name => name
   routes = routes.map(item => item.replace(path, ''));
+  console.log(58585858, routes);
   // Get the route to be rendered to remove the deep rendering
   const renderArr = getRenderArr(routes);
   // Conversion and stitching parameters
@@ -178,5 +185,5 @@ export function getQueryPath(path = '', query = {}) {
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
 export function isUrl(path) {
-  return reg.test(path);
+  return reg.test(path); //用于检测一个字符串是否匹配 .
 }

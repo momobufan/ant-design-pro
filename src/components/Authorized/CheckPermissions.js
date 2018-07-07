@@ -26,7 +26,9 @@ const checkPermissions = (authority, currentAuthority, target, Exception) => {
   }
   // 数组处理
   if (Array.isArray(authority)) {
+    console.log(3333, authority);
     if (authority.indexOf(currentAuthority) >= 0) {
+      console.log(44444, target);
       return target;
     }
     if (Array.isArray(currentAuthority)) {
@@ -87,3 +89,8 @@ const check = (authority, target, Exception) => {
 };
 
 export default check;
+
+// CheckPermissions组件(返回有check，引用时被重命名为 CheckPermissions),其中CURRENT即为之前通过RenderAuthorized(getAuthority())时，计算的当前权限。
+//checkPermissions方法，会判定CURRENT是否在authority权限范围内，如果有权限则返回target，否则返回Exception
+
+//结合路由生成是调用AuthorizedRoute组件封装和AuthorizedRoute组件的功能

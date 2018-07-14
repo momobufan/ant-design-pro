@@ -1,5 +1,5 @@
-import fetch from 'dva/fetch';
-import { notification } from 'antd';
+import fetch from 'dva/fetch'; //
+import { notification } from 'antd'; //提示框组件
 import { routerRedux } from 'dva/router';
 import store from '../index';
 
@@ -44,14 +44,17 @@ function checkStatus(response) {
  */
 export default function request(url, options) {
   const defaultOptions = {
-    credentials: 'include',
+    credentials: 'include',//不懂为什么有这步
   };
   const newOptions = { ...defaultOptions, ...options };
+  console.log(newOptions);
   if (
     newOptions.method === 'POST' ||
     newOptions.method === 'PUT' ||
     newOptions.method === 'DELETE'
   ) {
+    
+    //不懂
     if (!(newOptions.body instanceof FormData)) {
       newOptions.headers = {
         Accept: 'application/json',
@@ -67,6 +70,8 @@ export default function request(url, options) {
       };
     }
   }
+
+  //　fetch是用来取代传统的XMLHttpRequest的。 它的优点很多，包括链式调用的语法、返回promise等。
 
   return fetch(url, newOptions)
     .then(checkStatus)

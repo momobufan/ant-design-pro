@@ -28,5 +28,5 @@ app.router(require('./router').default); // 注册router
 
 // 5. Start
 app.start('#root'); //挂载
-
+// console.log(app._store);
 export default app._store; // eslint-disable-line

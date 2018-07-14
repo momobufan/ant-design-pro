@@ -3,7 +3,7 @@ import { routerRedux, Route, Switch } from 'dva/router'; //引入路由
 // routerRedux 跳转
 // Switch 二选一
 import { LocaleProvider, Spin } from 'antd'; // 引入 组件 国际化   加载
-import zhCN from 'antd/lib/locale-provider/zh_CN';
+import zhCN from 'antd/lib/locale-provider/zh_CN'; //引入中文
 import dynamic from 'dva/dynamic'; // 引入dva 内置了 dynamic 方法用于实现组件的动态加载
 import { getRouterData } from './common/router'; //引入数据
 import Authorized from './utils/Authorized'; //权限认证
@@ -11,7 +11,6 @@ import { getQueryPath } from './utils/utils';
 import styles from './index.less';
 
 const { ConnectedRouter } = routerRedux; //ConnectedRouter组件
-console.log(routerRedux.ConnectedRouter);
 const { AuthorizedRoute } = Authorized;
 
 dynamic.setDefaultLoadingComponent(() => {
@@ -20,8 +19,6 @@ dynamic.setDefaultLoadingComponent(() => {
 
 function RouterConfig({ history, app }) {
   const routerData = getRouterData(app);
-  console.log(66666666666666666, history);
-  console.log(22222222222222222222222222, routerData);
   // 总的  {/: {…}, /dashboard/analysis: {…}, /dashboard/monitor: {…}, /dashboard/workplace: {…}, /form/basic-form: {…}, …}
   // /:{name: undefined, authority: undefined, hideInBreadcrumb: undefined, component: ƒ}
   // /dashboard/analysis:{name: "分析页", authority: undefined, hideInBreadcrumb: undefined, component: ƒ}

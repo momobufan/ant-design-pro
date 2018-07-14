@@ -1,4 +1,4 @@
-import { isUrl } from '../utils/utils'; //引入isUrl方法
+import { isUrl } from '../utils/utils'; //引入isUrl方法，正则表达式看不懂，好像是判断网址的
 
 const menuData = [
   {
@@ -179,7 +179,7 @@ function formatter(data, parentPath = '/', parentAuthority) {
       authority: item.authority || parentAuthority,
     };
     if (item.children) {
-      //为了item.children如果存在children就调用回调函数
+      //为了item.children如果存在children
       result.children = formatter(item.children, `${parentPath}${item.path}/`, item.authority);
     }
     return result;

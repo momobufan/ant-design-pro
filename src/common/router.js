@@ -6,12 +6,7 @@ import { getMenuData } from './menu';
 let routerDataCache;
 
 const modelNotExisted = (app, model) =>
-  // eslint-disable-next-line
-  // console.log(app._models)
   !app._models.some(({ namespace }) => {
-    // console.log(app);
-    // console.log(model);
-    // console.log(model.substring(model.lastIndexOf('/') + 1))
     //则将从字符串的最后一个字符处开始检索
     return namespace === model.substring(model.lastIndexOf('/') + 1);
   });
@@ -27,32 +22,40 @@ const modelNotExisted = (app, model) =>
 const dynamicWrapper = (app, models, component) => {
   // () => require('module')
   // transformed by babel-plugin-dynamic-import-node-sync
-  // console.log(component.toString());
+ 
   if (component.toString().indexOf('.then(') < 0) {
-    //执行这步是为了什么
+    //执行这步是为了什么 不懂
     // 如果要检索的字符串值没有出现，则该方法返回 -1
-    console.log('mmmmmmmm', models);
     models.forEach(model => {
       if (modelNotExisted(app, model)) {
         // eslint-disable-next-line
-        app.model(require(`../models/${model}`).default); //?
+        app.model(require(`../models/${model}`).default);
+
+        //不懂 这个require
       }
     });
 
-    console.log('qqqqq', models);
 
+    //不懂 从哪冒出的props,走这步是为了什么
     return props => {
       if (!routerDataCache) {
         routerDataCache = getRouterData(app);
       }
+      // console.log(routerDataCache);
+      // console.log(createElement(component().default, {
+      //   ...props,
+      //   routerData: routerDataCache,
+      // }))
       return createElement(component().default, {
         ...props,
         routerData: routerDataCache,
-      });
+      });//返回一个组件
     };
   }
   // () => import('module')
+  // console.log(props);
 
+  //如果上面if运行了，这里就不运行了，但是为什么这么做就不知道了
   return dynamic({
     app,
     models: () =>
@@ -61,9 +64,10 @@ const dynamicWrapper = (app, models, component) => {
     // add routerData prop
     component: () => {
       if (!routerDataCache) {
-        // console.log(12258525555)
+        // console.log(1234656)
         routerDataCache = getRouterData(app);
       }
+      //不懂
       return component().then(raw => {
         const Component = raw.default || raw;
         return props =>
@@ -86,14 +90,12 @@ function getFlatMenuData(menus) {
   let keys = {};
   menus.forEach(item => {
     if (item.children) {
-      //假如存在子级
       keys[item.path] = { ...item }; //path做key
       keys = { ...keys, ...getFlatMenuData(item.children) }; // 把子集里每一个各自path
     } else {
       keys[item.path] = { ...item };
     }
   });
-  // console.log(keys)
   //  /dashboard:
   // authority:undefined
   // children:Array(3)
@@ -219,10 +221,10 @@ export const getRouterData = app => {
   };
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());
-
   // Route configuration data
-  // eg. {name,authority ...routerConfig }
+  // eg. {name,authority ...routerConfig}
   const routerData = {};
+
   // The route matches the menu
   Object.keys(routerConfig).forEach(path => {
     // Regular match item name

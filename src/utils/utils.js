@@ -10,7 +10,7 @@ export function fixedZero(val) {
 
 export function getTimeDistance(type) {
   const now = new Date();
-  const oneDay = 1000 * 60 * 60 * 24;
+  const oneDay = 1000 * 60 * 60 * 24; //一天毫秒数
 
   if (type === 'today') {
     now.setHours(0);
@@ -145,15 +145,11 @@ function getRenderArr(routes) {
  * @param {routerData} routerData
  */
 export function getRoutes(path, routerData) {
-  console.log('aaaaaaaaaaaaaaaaaa', path);
-  // console.log('bbbbbbbbbbbb',routerData)
   let routes = Object.keys(routerData).filter(
     routePath => routePath.indexOf(path) === 0 && routePath !== path
   );
-  console.log(13131313, routes);
   // Replace path to '' eg. path='user' /user/name => name
   routes = routes.map(item => item.replace(path, ''));
-  console.log(58585858, routes);
   // Get the route to be rendered to remove the deep rendering
   const renderArr = getRenderArr(routes);
   // Conversion and stitching parameters
@@ -169,9 +165,12 @@ export function getRoutes(path, routerData) {
   return renderRoutes;
 }
 
+
+//登录页面有用到
 export function getPageQuery() {
   return parse(window.location.href.split('?')[1]);
 }
+
 
 export function getQueryPath(path = '', query = {}) {
   const search = stringify(query);
@@ -185,5 +184,5 @@ export function getQueryPath(path = '', query = {}) {
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
 export function isUrl(path) {
-  return reg.test(path); //用于检测一个字符串是否匹配 .
+  return reg.test(path); //用于检测一个字符串（url地址）是否匹配 .
 }

@@ -3,8 +3,6 @@ import CheckPermissions from './CheckPermissions';
 
 class Authorized extends React.Component {
   render() {
-    // console.log(101010,React.Component )
-    console.log(8888888888888, this.props);
     const { children, authority, noMatch = null } = this.props;
     const childrenRender = typeof children === 'undefined' ? null : children;
     //现有权限和准入权限比对

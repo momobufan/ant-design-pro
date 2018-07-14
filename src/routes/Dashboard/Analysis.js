@@ -12,6 +12,7 @@ import {
   Tooltip,
   Menu,
   Dropdown,
+  Button,
 } from 'antd';
 import numeral from 'numeral';
 import {
@@ -500,6 +501,8 @@ export default class Analysis extends Component {
             ))}
           </Tabs>
         </Card>
+
+        <Button type='primary' shape='circle' icon='download' /> 
       </Fragment>
     );
   }

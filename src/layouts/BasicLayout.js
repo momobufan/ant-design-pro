@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'; //{Fragment} 快捷方式，不用 Reac
 import PropTypes from 'prop-types'; //利用prop-types第三方库对组件的props中的变量进行类型检测
 import { Layout, Icon, message } from 'antd'; //引入几个组件
 import DocumentTitle from 'react-document-title'; //为react是单页应用，所以我们可能需要根据不同的路由改变文档的title
-import { connect } from 'dva';
+import { connect } from 'dva'; //不懂
 import { Route, Redirect, Switch, routerRedux } from 'dva/router';
 import { ContainerQuery } from 'react-container-query'; //不懂
 import classNames from 'classnames'; //引入classNames
@@ -50,7 +50,7 @@ const getRedirect = item => {
   }
 };
 getMenuData().forEach(getRedirect);
-// redirectData(),获取每个第一个子集
+// redirectData(),获取每个第一个子级
 // 0:{from: "/dashboard", to: "/dashboard/analysis"}
 // 1:{from: "/dashboard/analysis", to: "/dashboard/analysis/monitor"}
 // 2:{from: "/form", to: "/form/basic-form"}
@@ -60,7 +60,6 @@ getMenuData().forEach(getRedirect);
 // 6:{from: "/result", to: "/result/success"}
 // 7:{from: "/exception", to: "/exception/403"}
 // 8:{from: "/user", to: "/user/login"}
-
 // console.log(147147,getMenuData()); 菜单getMenuData没有变化
 // console.log(47474747,redirectData);
 
@@ -70,19 +69,24 @@ getMenuData().forEach(getRedirect);
  * @param {Object} routerData 路由配置
  */
 const getBreadcrumbNameMap = (menuData, routerData) => {
+  // console.log(menuData);
+  // console.log(routerData)
   const result = {};
   const childResult = {};
   for (const i of menuData) {
     if (!routerData[i.path]) {
       result[i.path] = i;
     }
+    
     if (i.children) {
       // Object.assign(target, ...sources)  target:目标对象， sources:源对象   返回值:目标对象
       Object.assign(childResult, getBreadcrumbNameMap(i.children, routerData));
     }
   }
+  // console.log(Object.assign({}, routerData, result, childResult))
   return Object.assign({}, routerData, result, childResult);
 };
+//getBreadcrumbNameMap //是为了把所有父级的路由也列出来
 
 const query = {
   'screen-xs': {
@@ -113,6 +117,7 @@ let isMobile;
 enquireScreen(b => {
   isMobile = b;
 });
+//不懂
 
 class BasicLayout extends React.PureComponent {
   static childContextTypes = {
@@ -124,17 +129,21 @@ class BasicLayout extends React.PureComponent {
     isMobile,
   };
 
+// https://segmentfault.com/a/1190000002878442
   getChildContext() {
     const { location, routerData } = this.props;
     // console.log(22228888,routerData);
+    // console.log(location);
     //routerData以path做key的所有项
     //location {pathname: "/dashboard/analysis/monitor", search: "", hash: "", state: undefined}
     //pathname:当前页面路径
+    // console.log(getBreadcrumbNameMap(getMenuData(), routerData))
     return {
       location,
       breadcrumbNameMap: getBreadcrumbNameMap(getMenuData(), routerData),
     };
   }
+//getChildContext 这个方法就是设置 context 的过程，它返回的对象就是 context，所有的子组件都可以访问到这个对象。
 
   //生命周期
   //componentDidMount()
@@ -195,6 +204,7 @@ class BasicLayout extends React.PureComponent {
     return redirect;
   };
 
+  //点击按钮，侧边栏收缩
   handleMenuCollapse = collapsed => {
     const { dispatch } = this.props;
     dispatch({
@@ -203,6 +213,7 @@ class BasicLayout extends React.PureComponent {
     });
   };
 
+  //清除通知
   handleNoticeClear = type => {
     message.success(`清空了${type}`);
     const { dispatch } = this.props;
@@ -212,6 +223,7 @@ class BasicLayout extends React.PureComponent {
     });
   };
 
+  //退出登录
   handleMenuClick = ({ key }) => {
     const { dispatch } = this.props;
     if (key === 'triggerError') {
@@ -225,8 +237,11 @@ class BasicLayout extends React.PureComponent {
     }
   };
 
+
+  //获取所有消息
   handleNoticeVisibleChange = visible => {
     const { dispatch } = this.props;
+    console.log(123456)
     if (visible) {
       dispatch({
         type: 'global/fetchNotices',
@@ -244,10 +259,10 @@ class BasicLayout extends React.PureComponent {
       match,
       location,
     } = this.props;
-    console.log('aaaaaaaabbbb', this.props);
-    console.log(100000000000000000000, match.path);
-    console.log(70, location);
+
     const { isMobile: mb } = this.state;
+    // console.log(this.state);
+    // console.log(isMobile)
     const bashRedirect = this.getBaseRedirect();
     const layout = (
       <Layout>

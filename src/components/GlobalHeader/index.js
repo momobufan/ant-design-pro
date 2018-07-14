@@ -125,7 +125,8 @@ export default class GlobalHeader extends PureComponent {
             className={styles.action}
             count={currentUser.notifyCount}
             onItemClick={(item, tabProps) => {
-              console.log(item, tabProps); // eslint-disable-line
+              // console.log(item, tabProps);//消息通知李的每项
+              // eslint-disable-line
             }}
             onClear={onNoticeClear}
             onPopupVisibleChange={onNoticeVisibleChange}
